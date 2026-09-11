@@ -5,7 +5,7 @@ import os
 
 
 class FileStorage:
-    """Serializes instances to JSON file and deserializes back to instances."""
+    """Serializes instances to JSON file and deserializes back."""
     __file_path = "file.json"
     __objects = {}
 
