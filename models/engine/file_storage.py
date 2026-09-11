@@ -16,20 +16,20 @@ class FileStorage:
 
     def all(self):
         """Returns the dictionary __objects."""
-        return FileStorage.__objects
+        return self.__class__.__objects
 
     def new(self, obj):
         """Sets in __objects the obj with key <obj class name>.id."""
         if obj is not None:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
-            FileStorage.__objects[key] = obj
+            self.__class__.__objects[key] = obj
 
     def save(self):
         """Serializes __objects to the JSON file (path: __file_path)."""
         json_objects = {}
-        for key, obj in FileStorage.__objects.items():
+        for key, obj in self.__class__.__objects.items():
             json_objects[key] = obj.to_dict()
-        with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
+        with open(self.__class__.__file_path, "w", encoding="utf-8") as f:
             json.dump(json_objects, f)
 
     def reload(self):
@@ -40,14 +40,14 @@ class FileStorage:
             "BaseModel": BaseModel
         }
 
-        if os.path.isfile(FileStorage.__file_path):
+        if os.path.exists(self.__class__.__file_path):
             try:
-                with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
+                with open(self.__class__.__file_path, "r", encoding="utf-8") as f:
                     obj_dict = json.load(f)
                     for key, value in obj_dict.items():
                         cls_name = value.get("__class__")
                         if cls_name in classes:
-                            FileStorage.__objects[key] = (
+                            self.__class__.__objects[key] = (
                                 classes[cls_name](**value)
                             )
             except Exception:
