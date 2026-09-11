@@ -40,13 +40,15 @@ class FileStorage:
             "BaseModel": BaseModel
         }
 
-        if os.path.exists(FileStorage.__file_path):
+        if os.path.isfile(FileStorage.__file_path):
             try:
                 with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
                     obj_dict = json.load(f)
                     for key, value in obj_dict.items():
                         cls_name = value.get("__class__")
                         if cls_name in classes:
-                            FileStorage.__objects[key] = classes[cls_name](**value)
+                            FileStorage.__objects[key] = (
+                                classes[cls_name](**value)
+                            )
             except Exception:
                 pass
